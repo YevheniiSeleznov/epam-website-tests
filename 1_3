@@ -1,0 +1,37 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+def test_change_language_to_ua():
+    # Set up the WebDriver
+    driver = webdriver.Chrome()
+
+    try:
+        # Open EPAM.com
+        driver.get("https://www.epam.com")
+
+        # Click on the language dropdown to open language options
+        language_dropdown = driver.find_element(By.CSS_SELECTOR, ".language-selector .drop-down-link")
+        language_dropdown.click()
+
+        # Select Ukraine language option
+        ua_language_option = driver.find_element(By.XPATH, "//div[@class='drop-down']//a[text()='Ukraine']")
+        ua_language_option.click()
+
+        # Wait for the language change to take effect
+        WebDriverWait(driver, 10).until(
+            EC.text_to_be_present_in_element((By.CSS_SELECTOR, ".language-selector .drop-down-link"), "UA")
+        )
+
+        # Verify that the site's context has changed to UA
+        current_language = driver.find_element(By.CSS_SELECTOR, ".language-selector .drop-down-link").text
+        assert current_language == "UA", f"Expected language: UA, Actual language: {current_language}"
+
+    finally:
+        # Close the browser after the test
+        driver.quit()
+
+# Run the test
+test_change_language_to_ua()
