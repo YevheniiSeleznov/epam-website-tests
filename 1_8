@@ -1,0 +1,30 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+def test_company_logo_navigation():
+    # Set up the Chrome WebDriver
+    driver = webdriver.Chrome()
+
+    # Open the EPAM about page
+    driver.get("https://www.epam.com/about")
+
+    try:
+        # Click on the company logo in the header
+        logo_link = driver.find_element(By.XPATH, "//a[@class='header__logo']")
+        logo_link.click()
+
+        # Wait for the page to load
+        driver.implicitly_wait(10)  # Adjust the wait time based on your page load time
+
+        # Get the current URL after clicking the logo
+        current_url = driver.current_url
+
+        # Assert that the current URL is the main page URL
+        assert current_url == "https://www.epam.com/", f"Expected URL: https://www.epam.com/, Actual URL: {current_url}"
+
+    finally:
+        # Close the browser
+        driver.quit()
+
+# Run the test
+test_company_logo_navigation()
